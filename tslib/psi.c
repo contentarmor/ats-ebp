@@ -35,8 +35,6 @@
 #include "crc32m.h"
 #include "vqarray.h"
 
-#include "ATSTestReport.h"
-
 
 typedef struct {
    int type; 
@@ -151,7 +149,7 @@ int program_association_section_read(program_association_section_t *pas, uint8_t
    // check for pat spanning multiple TS packets
    if (patBuffer->buffer != NULL)
    {
-      LOG_DEBUG_ARGS ("program_association_section_read: patBuffer detected: patBufferAllocSz = %d, patBufferUsedSz = %d", 
+      LOG_DEBUG_ARGS ("program_association_section_read: patBuffer detected: patBufferAllocSz = %ld, patBufferUsedSz = %ld", 
          patBuffer->bufferAllocSz, patBuffer->bufferUsedSz);
       size_t numBytesToCopy = buf_len;
       if (buf_len > (patBuffer->bufferAllocSz - patBuffer->bufferUsedSz))
@@ -159,7 +157,7 @@ int program_association_section_read(program_association_section_t *pas, uint8_t
          numBytesToCopy = patBuffer->bufferAllocSz - patBuffer->bufferUsedSz;
       }
          
-      LOG_DEBUG_ARGS ("program_association_section_read: copying %d bytes to patBuffer", numBytesToCopy);
+      LOG_DEBUG_ARGS ("program_association_section_read: copying %ld bytes to patBuffer", numBytesToCopy);
       memcpy (patBuffer->buffer + patBuffer->bufferUsedSz, buf, numBytesToCopy);
       patBuffer->bufferUsedSz += numBytesToCopy;
       
@@ -182,8 +180,6 @@ int program_association_section_read(program_association_section_t *pas, uint8_t
    {
       LOG_ERROR_ARGS("Table ID in PAT is 0x%02X instead of expected 0x%02X", 
                      pas->table_id, program_association_section); 
-      reportAddErrorLogArgs("Table ID in PAT is 0x%02X instead of expected 0x%02X", 
-                     pas->table_id, program_association_section); 
       SAFE_REPORT_TS_ERR(-30); 
       resetPSITableBuffer(patBuffer);
       bs_free (b);
@@ -196,7 +192,6 @@ int program_association_section_read(program_association_section_t *pas, uint8_t
    if (!pas->section_syntax_indicator) 
    {
       LOG_ERROR("section_syntax_indicator not set in PAT"); 
-      reportAddErrorLog("section_syntax_indicator not set in PAT"); 
       SAFE_REPORT_TS_ERR(-31); 
       resetPSITableBuffer(patBuffer);
       bs_free (b);
@@ -207,8 +202,6 @@ int program_association_section_read(program_association_section_t *pas, uint8_t
    if (pas->section_length > MAX_SECTION_LEN) 
    {
       LOG_ERROR_ARGS("PAT section length is 0x%02X, larger than maximum allowed 0x%02X", 
-                     pas->section_length, MAX_SECTION_LEN); 
-      reportAddErrorLogArgs("PAT section length is 0x%02X, larger than maximum allowed 0x%02X", 
                      pas->section_length, MAX_SECTION_LEN); 
       SAFE_REPORT_TS_ERR(-32); 
       resetPSITableBuffer(patBuffer);
@@ -224,7 +217,6 @@ int program_association_section_read(program_association_section_t *pas, uint8_t
       {
          // should never get here
          LOG_ERROR ("program_association_section_read: unexpected patBufffer");
-         reportAddErrorLog ("program_association_section_read: unexpected patBufffer");
          resetPSITableBuffer(patBuffer);
       }
 
@@ -302,7 +294,6 @@ int program_association_section_read(program_association_section_t *pas, uint8_t
    if (pas_crc != pas->CRC_32) 
    {
       LOG_ERROR_ARGS("PAT CRC_32 specified as 0x%08X, but calculated as 0x%08X", pas->CRC_32, pas_crc); 
-      reportAddErrorLogArgs("PAT CRC_32 specified as 0x%08X, but calculated as 0x%08X", pas->CRC_32, pas_crc); 
       SAFE_REPORT_TS_ERR(-33); 
       resetPSITableBuffer(patBuffer);
       bs_free (b);
@@ -375,7 +366,7 @@ int es_info_read(elementary_stream_info_t *es, bs_t *b)
 
    bs_skip_u(b, 4); 
    es->ES_info_length = bs_read_u(b, 12); 
-   LOG_DEBUG_ARGS ("es_info_read: es_info_start = %d, bs_pos(b) = %d, b->end = %d", es_info_start, bs_pos(b), b->end - b->start);
+   LOG_DEBUG_ARGS ("es_info_read: es_info_start = %d, bs_pos(b) = %d, b->end = %ld", es_info_start, bs_pos(b), b->end - b->start);
    LOG_DEBUG_ARGS ("es_info_read pre-return %d", bs_pos(b) - es_info_start);
    
    LOG_DEBUG_ARGS ("es_info_read: PID = %d, streamType = 0x%x, ES_info_length = %d.  Calling read_descriptor_loop", 
@@ -385,8 +376,6 @@ int es_info_read(elementary_stream_info_t *es, bs_t *b)
    if (es->ES_info_length > MAX_ES_INFO_LEN) 
    {
       LOG_ERROR_ARGS("ES info length is 0x%02X, larger than maximum allowed 0x%02X", 
-                     es->ES_info_length, MAX_ES_INFO_LEN); 
-      reportAddErrorLogArgs("ES info length is 0x%02X, larger than maximum allowed 0x%02X", 
                      es->ES_info_length, MAX_ES_INFO_LEN); 
       SAFE_REPORT_TS_ERR(-60); 
       return 0;
@@ -493,14 +482,14 @@ int program_map_section_read(program_map_section_t *pms, uint8_t *buf, size_t bu
    // check for pmt spanning multiple TS packets
    if (pmtBuffer->buffer != NULL)
    {
-      LOG_DEBUG_ARGS ("program_map_section_read: pmtBuffer detected: pmtBufferAllocSz = %d, pmtBufferUsedSz = %d", pmtBuffer->bufferAllocSz, pmtBuffer->bufferUsedSz);
+      LOG_DEBUG_ARGS ("program_map_section_read: pmtBuffer detected: pmtBufferAllocSz = %ld, pmtBufferUsedSz = %ld", pmtBuffer->bufferAllocSz, pmtBuffer->bufferUsedSz);
       size_t numBytesToCopy = buf_size;
       if (buf_size > (pmtBuffer->bufferAllocSz - pmtBuffer->bufferUsedSz))
       {
          numBytesToCopy = pmtBuffer->bufferAllocSz - pmtBuffer->bufferUsedSz;
       }
          
-      LOG_DEBUG_ARGS ("program_map_section_read: copying %d bytes to pmtBuffer", numBytesToCopy);
+      LOG_DEBUG_ARGS ("program_map_section_read: copying %ld bytes to pmtBuffer", numBytesToCopy);
       memcpy (pmtBuffer->buffer + pmtBuffer->bufferUsedSz, buf, numBytesToCopy);
       pmtBuffer->bufferUsedSz += numBytesToCopy;
       
@@ -521,7 +510,6 @@ int program_map_section_read(program_map_section_t *pms, uint8_t *buf, size_t bu
    if (pms->table_id != TS_program_map_section) 
    {
       LOG_ERROR_ARGS("Table ID in PMT is 0x%02X instead of expected 0x%02X", pms->table_id, TS_program_map_section); 
-      reportAddErrorLogArgs("Table ID in PMT is 0x%02X instead of expected 0x%02X", pms->table_id, TS_program_map_section); 
       SAFE_REPORT_TS_ERR(-40);
       resetPSITableBuffer(pmtBuffer);
       bs_free (b);
@@ -532,7 +520,6 @@ int program_map_section_read(program_map_section_t *pms, uint8_t *buf, size_t bu
    if (!pms->section_syntax_indicator) 
    {
       LOG_ERROR("section_syntax_indicator not set in PMT"); 
-      reportAddErrorLog("section_syntax_indicator not set in PMT"); 
       SAFE_REPORT_TS_ERR(-41); 
       resetPSITableBuffer(pmtBuffer);
       bs_free (b);
@@ -545,8 +532,6 @@ int program_map_section_read(program_map_section_t *pms, uint8_t *buf, size_t bu
    if (pms->section_length > MAX_SECTION_LEN) 
    {
       LOG_ERROR_ARGS("PMT section length is 0x%02X, larger than maximum allowed 0x%02X", 
-                     pms->section_length, MAX_SECTION_LEN); 
-      reportAddErrorLogArgs("PMT section length is 0x%02X, larger than maximum allowed 0x%02X", 
                      pms->section_length, MAX_SECTION_LEN); 
       SAFE_REPORT_TS_ERR(-42); 
       resetPSITableBuffer(pmtBuffer);
@@ -562,7 +547,6 @@ int program_map_section_read(program_map_section_t *pms, uint8_t *buf, size_t bu
       {
          // should never get here
          LOG_ERROR ("program_map_section_read: unexpected pmtBufffer");
-         reportAddErrorLog ("program_map_section_read: unexpected pmtBufffer");
          resetPSITableBuffer(pmtBuffer);
       }
 
@@ -592,7 +576,6 @@ int program_map_section_read(program_map_section_t *pms, uint8_t *buf, size_t bu
    if (pms->section_number != 0 || pms->last_section_number != 0) 
    {
       LOG_ERROR("Multi-section PMT is not allowed/n"); 
-      reportAddErrorLog("Multi-section PMT is not allowed/n"); 
       SAFE_REPORT_TS_ERR(-43); 
       resetPSITableBuffer(pmtBuffer);
       bs_free (b);
@@ -604,7 +587,6 @@ int program_map_section_read(program_map_section_t *pms, uint8_t *buf, size_t bu
    if (pms->PCR_PID < GENERAL_PURPOSE_PID_MIN || pms->PCR_PID > GENERAL_PURPOSE_PID_MAX) 
    {
       LOG_ERROR_ARGS("PCR PID has invalid value 0x%02X", pms->PCR_PID); 
-      reportAddErrorLogArgs("PCR PID has invalid value 0x%02X", pms->PCR_PID); 
       SAFE_REPORT_TS_ERR(-44); 
       resetPSITableBuffer(pmtBuffer);
       bs_free (b);
@@ -617,8 +599,6 @@ int program_map_section_read(program_map_section_t *pms, uint8_t *buf, size_t bu
    if (pms->program_info_length > MAX_PROGRAM_INFO_LEN) 
    {
       LOG_ERROR_ARGS("PMT program info length is 0x%02X, larger than maximum allowed 0x%02X", 
-                     pms->program_info_length, MAX_PROGRAM_INFO_LEN); 
-      reportAddErrorLogArgs("PMT program info length is 0x%02X, larger than maximum allowed 0x%02X", 
                      pms->program_info_length, MAX_PROGRAM_INFO_LEN); 
       SAFE_REPORT_TS_ERR(-45); 
       resetPSITableBuffer(pmtBuffer);
@@ -644,7 +624,6 @@ int program_map_section_read(program_map_section_t *pms, uint8_t *buf, size_t bu
    if (pas_crc != pms->CRC_32) 
    {
       LOG_ERROR_ARGS("PMT CRC_32 specified as 0x%08X, but calculated as 0x%08X", pms->CRC_32, pas_crc); 
-      reportAddErrorLogArgs("PMT CRC_32 specified as 0x%08X, but calculated as 0x%08X", pms->CRC_32, pas_crc); 
       SAFE_REPORT_TS_ERR(-46); 
       resetPSITableBuffer(pmtBuffer);
       bs_free (b);
@@ -743,7 +722,7 @@ int conditional_access_section_read(conditional_access_section_t *cas, uint8_t *
    // check for pat spanning multiple TS packets
    if (catBuffer->buffer != NULL)
    {
-      LOG_DEBUG_ARGS ("conditional_access_section_read: catBuffer detected: catBufferAllocSz = %d, catBufferUsedSz = %d", 
+      LOG_DEBUG_ARGS ("conditional_access_section_read: catBuffer detected: catBufferAllocSz = %ld, catBufferUsedSz = %ld", 
          catBuffer->bufferAllocSz, catBuffer->bufferUsedSz);
       size_t numBytesToCopy = buf_len;
       if (buf_len > (catBuffer->bufferAllocSz - catBuffer->bufferUsedSz))
@@ -751,7 +730,7 @@ int conditional_access_section_read(conditional_access_section_t *cas, uint8_t *
          numBytesToCopy = catBuffer->bufferAllocSz - catBuffer->bufferUsedSz;
       }
          
-      LOG_DEBUG_ARGS ("conditional_access_section_read: copying %d bytes to catBuffer", numBytesToCopy);
+      LOG_DEBUG_ARGS ("conditional_access_section_read: copying %ld bytes to catBuffer", numBytesToCopy);
       memcpy (catBuffer->buffer + catBuffer->bufferUsedSz, buf, numBytesToCopy);
       catBuffer->bufferUsedSz += numBytesToCopy;
       
@@ -773,8 +752,6 @@ int conditional_access_section_read(conditional_access_section_t *cas, uint8_t *
    {
       LOG_ERROR_ARGS("Table ID in CAT is 0x%02X instead of expected 0x%02X", 
                      cas->table_id, conditional_access_section); 
-      reportAddErrorLogArgs("Table ID in CAT is 0x%02X instead of expected 0x%02X", 
-                     cas->table_id, conditional_access_section); 
       SAFE_REPORT_TS_ERR(-30); 
       resetPSITableBuffer(catBuffer);
       bs_free (b);
@@ -787,7 +764,6 @@ int conditional_access_section_read(conditional_access_section_t *cas, uint8_t *
    if (!cas->section_syntax_indicator) 
    {
       LOG_ERROR("section_syntax_indicator not set in CAT"); 
-      reportAddErrorLog("section_syntax_indicator not set in CAT"); 
       SAFE_REPORT_TS_ERR(-31); 
       resetPSITableBuffer(catBuffer);
       bs_free (b);
@@ -798,8 +774,6 @@ int conditional_access_section_read(conditional_access_section_t *cas, uint8_t *
    if (cas->section_length > 1021) // max CAT length 
    {
       LOG_ERROR_ARGS("CAT section length is 0x%02X, larger than maximum allowed 0x%02X", 
-                     cas->section_length, MAX_SECTION_LEN); 
-      reportAddErrorLogArgs("CAT section length is 0x%02X, larger than maximum allowed 0x%02X", 
                      cas->section_length, MAX_SECTION_LEN); 
       SAFE_REPORT_TS_ERR(-32); 
       resetPSITableBuffer(catBuffer);
@@ -815,7 +789,6 @@ int conditional_access_section_read(conditional_access_section_t *cas, uint8_t *
       {
          // should never get here
          LOG_ERROR ("conditional_access_section_read: unexpected catBufffer");
-         reportAddErrorLog ("conditional_access_section_read: unexpected catBufffer");
          resetPSITableBuffer(catBuffer);
       }
 
@@ -861,7 +834,6 @@ int conditional_access_section_read(conditional_access_section_t *cas, uint8_t *
    if (cas_crc != cas->CRC_32) 
    {
       LOG_ERROR_ARGS("CAT CRC_32 specified as 0x%08X, but calculated as 0x%08X", cas->CRC_32, cas_crc); 
-      reportAddErrorLogArgs("CAT CRC_32 specified as 0x%08X, but calculated as 0x%08X", cas->CRC_32, cas_crc); 
       SAFE_REPORT_TS_ERR(-33); 
       resetPSITableBuffer(catBuffer);
       bs_free (b);

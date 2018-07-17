@@ -28,7 +28,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ebp.h>
 #include <bs.h>
 #include <arpa/inet.h>
-#include "ATSTestReport.h"
 
 
 ebp_t *ebp_new()
@@ -151,7 +150,6 @@ int ebp_validate_groups(const ebp_t *ebp)
          if (grouping_id_i == grouping_id_j)
          {
             LOG_ERROR_ARGS ("ebp_validate_groups: FAIL: duplicate group id %d detected", grouping_id_i);
-            reportAddErrorLogArgs ("ebp_validate_groups: FAIL: duplicate group id %d detected", grouping_id_i);
             returnCode = -1;
          }
       }
@@ -167,7 +165,6 @@ int ebp_validate_groups(const ebp_t *ebp)
          if (i == 0)
          {
             LOG_ERROR ("ebp_validate_groups: FAIL: orphan group id 126 detected (1)");
-            reportAddErrorLog ("ebp_validate_groups: FAIL: orphan group id 126 detected (1)");
             returnCode = -1;
             continue;
          }
@@ -176,7 +173,6 @@ int ebp_validate_groups(const ebp_t *ebp)
          if (previous_grouping_id == 126 || previous_grouping_id == 127)
          {
             LOG_ERROR ("ebp_validate_groups: FAIL: orphan group id 126 detected (2)");
-            reportAddErrorLog ("ebp_validate_groups: FAIL: orphan group id 126 detected (2)");
             returnCode = -1;
          }
       }
@@ -185,7 +181,6 @@ int ebp_validate_groups(const ebp_t *ebp)
          if (i == 0)
          {
             LOG_ERROR ("ebp_validate_groups: FAIL: orphan group id 127 detected (1)");
-            reportAddErrorLog ("ebp_validate_groups: FAIL: orphan group id 127 detected (1)");
             returnCode = -1;
             continue;
          }
@@ -194,7 +189,6 @@ int ebp_validate_groups(const ebp_t *ebp)
          if (previous_grouping_id == 127)
          {
             LOG_ERROR ("ebp_validate_groups: FAIL: orphan group id 127 detected (2)");
-            reportAddErrorLog ("ebp_validate_groups: FAIL: orphan group id 127 detected (2)");
             returnCode = -1;
          }
       }
@@ -411,7 +405,7 @@ ebp_descriptor_t* ebp_descriptor_copy(const ebp_descriptor_t *ebp_in)
 
    ebp_descriptor_t *ebp = (ebp_descriptor_t *)calloc(1, sizeof(ebp_descriptor_t));
    
-   LOG_INFO_ARGS ("ebp_descriptor_copy: from %x to %x", (unsigned int)ebp_in, (unsigned int)ebp);
+   LOG_INFO_ARGS ("ebp_descriptor_copy: from %p to %p", ebp_in, ebp);
    ebp->descriptor.tag = EBP_DESCRIPTOR;
    ebp->descriptor.length = ebp_in->descriptor.length;
 

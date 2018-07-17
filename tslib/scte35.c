@@ -25,10 +25,10 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <unistd.h>
 
 #include "scte35.h"
 #include "log.h"
-#include "ATSTestReport.h"
 
 
 scte35_splice_info_section* scte35_splice_info_section_new()
@@ -168,7 +168,7 @@ int scte35_splice_info_section_read(scte35_splice_info_section *sis, uint8_t *bu
    // check for pat spanning multiple TS packets
    if (scte35TableBuffer->buffer != NULL)
    {
-      LOG_DEBUG_ARGS ("scte35_splice_info_section_read: scte35TableBuffer detected: scte35TableBufferAllocSz = %d, scte35TableBufferUsedSz = %d", 
+      LOG_DEBUG_ARGS ("scte35_splice_info_section_read: scte35TableBuffer detected: scte35TableBufferAllocSz = %ld, scte35TableBufferUsedSz = %ld", 
          scte35TableBuffer->bufferAllocSz, scte35TableBuffer->bufferUsedSz);
       size_t numBytesToCopy = buf_len;
       if (buf_len > (scte35TableBuffer->bufferAllocSz - scte35TableBuffer->bufferUsedSz))
@@ -176,7 +176,7 @@ int scte35_splice_info_section_read(scte35_splice_info_section *sis, uint8_t *bu
          numBytesToCopy = scte35TableBuffer->bufferAllocSz - scte35TableBuffer->bufferUsedSz;
       }
          
-      LOG_DEBUG_ARGS ("scte35_splice_info_section_read: copying %d bytes to catBuffer", numBytesToCopy);
+      LOG_DEBUG_ARGS ("scte35_splice_info_section_read: copying %ld bytes to catBuffer", numBytesToCopy);
       memcpy (scte35TableBuffer->buffer + scte35TableBuffer->bufferUsedSz, buf, numBytesToCopy);
       scte35TableBuffer->bufferUsedSz += numBytesToCopy;
       
@@ -198,7 +198,6 @@ int scte35_splice_info_section_read(scte35_splice_info_section *sis, uint8_t *bu
    if (SCTE35_SPLICE_TABLE_ID != sis->table_id)
    {
       LOG_ERROR_ARGS ("scte35_splice_info_section_read: FAIL: table_id does not equal 0x%x", SCTE35_SPLICE_TABLE_ID);
-      reportAddErrorLogArgs ("scte35_splice_info_section_read: FAIL: table_id does not equal 0x%x", SCTE35_SPLICE_TABLE_ID);
       return -1;
    }
 
@@ -215,7 +214,6 @@ int scte35_splice_info_section_read(scte35_splice_info_section *sis, uint8_t *bu
       {
          // should never get here
          LOG_ERROR ("scte35_splice_info_section_read: unexpected catBufffer");
-         reportAddErrorLog ("scte35_splice_info_section_read: unexpected catBufffer");
          resetPSITableBuffer(scte35TableBuffer);
       }
 

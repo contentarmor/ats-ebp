@@ -34,8 +34,6 @@
 #include <hashtable.h>
 #include <hashtable_str.h>
 
-#include "ATSTestReport.h"
-
 
 DEFINE_HASHTABLE_INSERT(descriptor_table_insert, uint32_t, descriptor_table_entry_t);
 DEFINE_HASHTABLE_SEARCH(descriptor_table_search, uint32_t, descriptor_table_entry_t);
@@ -193,8 +191,6 @@ descriptor_t* language_descriptor_read(descriptor_t *desc, bs_t *b)
    {
       LOG_ERROR_ARGS("Language descriptor has tag 0x%02X instead of expected 0x%02X", 
                      desc->tag, ISO_639_LANGUAGE_DESCRIPTOR); 
-      reportAddErrorLogArgs("Language descriptor has tag 0x%02X instead of expected 0x%02X", 
-                     desc->tag, ISO_639_LANGUAGE_DESCRIPTOR); 
       SAFE_REPORT_TS_ERR(-50); 
       return NULL;
    }
@@ -302,8 +298,6 @@ descriptor_t* component_name_descriptor_read(descriptor_t *desc, bs_t *b)
    if (desc->tag != COMPONENT_NAME_DESCRIPTOR) 
    {
       LOG_ERROR_ARGS("Component Name descriptor has tag 0x%02X instead of expected 0x%02X", 
-                     desc->tag, COMPONENT_NAME_DESCRIPTOR); 
-      reportAddErrorLogArgs("Component Name descriptor has tag 0x%02X instead of expected 0x%02X", 
                      desc->tag, COMPONENT_NAME_DESCRIPTOR); 
       SAFE_REPORT_TS_ERR(-50); 
       return NULL;
@@ -564,8 +558,6 @@ descriptor_t* ac3_descriptor_read(descriptor_t *desc, bs_t *b)
    if (desc->tag != AC3_DESCRIPTOR) 
    {
       LOG_ERROR_ARGS("AC3 descriptor has tag 0x%02X instead of expected 0x%02X", 
-                     desc->tag, AC3_DESCRIPTOR); 
-      reportAddErrorLogArgs("AC3 descriptor has tag 0x%02X instead of expected 0x%02X", 
                      desc->tag, AC3_DESCRIPTOR); 
       SAFE_REPORT_TS_ERR(-50); 
       return NULL;

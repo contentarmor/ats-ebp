@@ -33,8 +33,6 @@
 #include "psi.h"
 #include <descriptors.h>
 
-#include "ATSTestReport.h"
-
 
 pid_info_t* pid_info_new() 
 { 
@@ -154,7 +152,6 @@ int mpeg2ts_program_register_pid_processor(mpeg2ts_program_t *m2p, uint32_t PID,
    if (esi == NULL) 
    {
       LOG_ERROR_ARGS("Elementary stream with PID 0x%02X not found in PMT of program %d", PID, m2p->program_number); 
-      reportAddErrorLogArgs("Elementary stream with PID 0x%02X not found in PMT of program %d", PID, m2p->program_number); 
       free(pid);
       return 0;
    }
@@ -196,7 +193,6 @@ pid_info_t* mpeg2ts_program_get_pid_info(mpeg2ts_program_t *m2p, uint32_t PID)
    if (m2p->pids == NULL) 
    {
       LOG_ERROR ("mpeg2ts_program_get_pid_info: NULL m2p->pids");
-      reportAddErrorLog ("mpeg2ts_program_get_pid_info: NULL m2p->pids");
       return NULL; 
    }
 
@@ -386,7 +382,7 @@ int mpeg2ts_program_read_pmt(mpeg2ts_program_t *m2p, ts_packet_t *ts)
       return ret;
    }
    
-   LOG_DEBUG_ARGS ("mpeg2ts_program_read_pmt -- 1: ts->payload.len = %d, adaptation_field_control = %d, payload_unit_start_indicator = %d", 
+   LOG_DEBUG_ARGS ("mpeg2ts_program_read_pmt -- 1: ts->payload.len = %ld, adaptation_field_control = %d, payload_unit_start_indicator = %d", 
       ts->payload.len, ts->header.adaptation_field_control, ts->header.payload_unit_start_indicator);
    if (program_map_section_read(new_pms, ts->payload.bytes, ts->payload.len, ts->header.payload_unit_start_indicator,
       &(m2p->pmtBuffer)) == 0) 
@@ -496,7 +492,6 @@ int mpeg2ts_stream_read_ts_packet(mpeg2ts_stream_t *m2s, ts_packet_t *ts)
    if (m2s->pat == NULL) 
    {
       LOG_INFO_ARGS("PAT missing -- unknown PID 0x%02X", ts->header.PID); 
-//      reportAddErrorLogArgs("PAT missing -- unknown PID 0x%02X", ts->header.PID); 
       ts_free(ts);  
       return 0;    
    }
