@@ -197,7 +197,8 @@ void resetPSITableBuffer(psi_table_buffer_t *psiTableBuffer);
 #define IS_VIDEO_STREAM(x) ((x == STREAM_TYPE_MPEG1_VIDEO) || \
                             (x == STREAM_TYPE_MPEG2_VIDEO) || \
                             (x == STREAM_TYPE_MPEG4_VIDEO) || \
-                            (x == STREAM_TYPE_AVC))
+                            (x == STREAM_TYPE_AVC)         || \
+                            (x == STREAM_TYPE_HEVC))
 
 #define IS_AUDIO_STREAM(x) ((x == STREAM_TYPE_MPEG1_AUDIO) || \
                             (x == STREAM_TYPE_MPEG2_AUDIO) || \
