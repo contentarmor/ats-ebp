@@ -35,14 +35,14 @@
 
 // fun thing to do: rewrite with C11 Generic syntax...
 
-#define SKIT_PRINT_SINT32(arg )     fprintf( stderr,  "%s:%d (in %s) \t%s=%"PRId32"\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
-#define SKIT_PRINT_UINT32(arg )     fprintf( stderr,  "%s:%d (in %s) \t%s=%"PRIu32"\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
+#define SKIT_PRINT_SINT32(arg )     fprintf( stderr,  "%s:%d (in %s) \t%s=%" PRId32 "\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
+#define SKIT_PRINT_UINT32(arg )     fprintf( stderr,  "%s:%d (in %s) \t%s=%" PRIu32 "\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
 
-#define SKIT_PRINT_SINT64(arg )  fprintf( stderr,  "%s:%d (in %s) \t%s=%"PRId64"\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
-#define SKIT_PRINT_UINT64(arg )  fprintf( stderr,  "%s:%d (in %s) \t%s=%"PRIu64"\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
+#define SKIT_PRINT_SINT64(arg )  fprintf( stderr,  "%s:%d (in %s) \t%s=%" PRId64 "\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
+#define SKIT_PRINT_UINT64(arg )  fprintf( stderr,  "%s:%d (in %s) \t%s=%" PRIu64 "\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
 
-#define SKIT_PRINT_UINT32_HEX(arg ) fprintf( stderr,  "%s:%d (in %s) \t%s=0x%"PRIX32"\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
-#define SKIT_PRINT_UINT64_HEX(arg ) fprintf( stderr,  "%s:%d (in %s) \t%s=0x%"PRIX64"\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
+#define SKIT_PRINT_UINT32_HEX(arg ) fprintf( stderr,  "%s:%d (in %s) \t%s=0x%" PRIX32 "\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
+#define SKIT_PRINT_UINT64_HEX(arg ) fprintf( stderr,  "%s:%d (in %s) \t%s=0x%" PRIX64 "\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
 
 #define SKIT_PRINT_STRING( arg )   fprintf( stderr,  "%s:%d (in %s)\t%s=%s\n",  __FILE__, __LINE__, __PRETTY_FUNCTION__, #arg,  (arg ) );
 

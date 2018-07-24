@@ -60,9 +60,9 @@ extern FILE* tslib_logfile;
 #define SKIT_LOG_TYPE_UINT_HEX_DBG	0x05
 #define SKIT_LOG_TYPE_STR_DBG		0x06
 
-#define SKIT_LOG_UINT32_DBG(str, prefix, arg, n)  fprintf((tslib_logfile == NULL)?stdout:tslib_logfile, "DEBUG: %s%s=%"PRIu32"\n", prefix, #arg, (arg));
-#define SKIT_LOG_UINT32_HEX_DBG(str, prefix, arg, n)  fprintf((tslib_logfile == NULL)?stdout:tslib_logfile, "DEBUG: %s%s=%"PRIX32"\n", prefix, #arg, (arg));
-#define SKIT_LOG_UINT64_DBG(str, prefix, arg, n)  fprintf((tslib_logfile == NULL)?stdout:tslib_logfile, "DEBUG: %s%s=%"PRIu64"\n", prefix, #arg, (arg));
+#define SKIT_LOG_UINT32_DBG(str, prefix, arg, n)  fprintf((tslib_logfile == NULL)?stdout:tslib_logfile, "DEBUG: %s%s=%" PRIu32 "\n", prefix, #arg, (arg));
+#define SKIT_LOG_UINT32_HEX_DBG(str, prefix, arg, n)  fprintf((tslib_logfile == NULL)?stdout:tslib_logfile, "DEBUG: %s%s=%" PRIX32 "\n", prefix, #arg, (arg));
+#define SKIT_LOG_UINT64_DBG(str, prefix, arg, n)  fprintf((tslib_logfile == NULL)?stdout:tslib_logfile, "DEBUG: %s%s=%" PRIu64 "\n", prefix, #arg, (arg));
 
 #define SKIT_LOG_UINT(str, level, arg, n) skit_log_struct((level), #arg,  (arg), SKIT_LOG_TYPE_UINT, NULL);
 #define SKIT_LOG_UINT_DBG(str, level, arg, n) skit_log_struct((level), #arg,  (arg), SKIT_LOG_TYPE_UINT_DBG, NULL);
