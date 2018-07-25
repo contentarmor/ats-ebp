@@ -53,6 +53,21 @@ void ts_free(ts_packet_t *ts)
    if (ts == NULL) return; 
    if (ts->payload.bytes != NULL) free(ts->payload.bytes); 
    if (ts->adaptation_field.private_data_bytes.bytes != NULL) free(ts->adaptation_field.private_data_bytes.bytes); 
+   if (ts->adaptation_field.scte128_private_data != NULL)
+   {
+      vqarray_iterator_t *it =
+         vqarray_iterator_new(ts->adaptation_field.scte128_private_data);
+      while (vqarray_iterator_has_next(it))
+      {
+         ts_scte128_private_data_t *scte128 =
+            (ts_scte128_private_data_t*)vqarray_iterator_next(it);
+
+         free(scte128->private_data_bytes.bytes);
+         free(scte128);
+      }
+      vqarray_iterator_free (it);
+      vqarray_free(ts->adaptation_field.scte128_private_data);
+   }
    free(ts);
 }
 
