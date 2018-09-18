@@ -131,7 +131,7 @@ void stc_flush(stc_t *stc)
    
    for (int i = 1; (qtsp = vqarray_shift(stc->ts_in)) != NULL; i++) 
    {
-      if (isnormal(qtsp->pcr_int)) 
+      if (isnormal((double)qtsp->pcr_int)) 
       {
          qtsp->pcr_int = stc->prev_pcr + (uint64_t)llrint(i * TS_SIZE * stc->pcr_rate); 
          if (qtsp->pcr_int >= PCR_MAX) 
