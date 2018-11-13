@@ -1,0 +1,60 @@
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+tslib/apps/ts_split
+tslib/apps/ts_validate_mult_segment
+tslib/apps/ts_validate_single_segment
+
+# Autotools files for h264bitstream 
+
+h264bitstream/.libs/
+h264bitstream/.deps/
+h264bitstream/libtool
+h264bitstream/Makefile
+h264bitstream/Makefile.in
+h264bitstream/config.log
+h264bitstream/config.status
+h264bitstream/aclocal.m4
+h264bitstream/autom4te.cache/
+h264bitstream/build-aux/
+h264bitstream/configure
+h264bitstream/m4/*
+h264bitstream/*.pc
+h264bitstream/*.pc.in
+h264bitstream/h264_analyze
+h264bitstream/libh264bitstream-uninstalled.sh
+
+!h264bitstream/m4/ax_*.m4
+
+# libstructures ignores
+libstructures/.depend
+
+# tslib ignores
+
+
