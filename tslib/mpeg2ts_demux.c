@@ -244,6 +244,10 @@ void mpeg2ts_stream_free(mpeg2ts_stream_t *m2s)
    {
       program_association_section_free(m2s->pat);
    }
+   if (m2s->cat != NULL)
+   {
+      conditional_access_section_free(m2s->cat); 
+   }
    if (m2s->arg_destructor != NULL && m2s->arg != NULL) 
    {
       m2s->arg_destructor(m2s->arg);
@@ -306,6 +310,10 @@ int mpeg2ts_stream_read_cat(mpeg2ts_stream_t *m2s, ts_packet_t *ts)
       }
       
       if (m2s->cat_processor != NULL) m2s->cat_processor(m2s, m2s->arg); 
+   }
+   else
+   {
+      conditional_access_section_free(new_cas); 
    }
    
    ts_free(ts);    
