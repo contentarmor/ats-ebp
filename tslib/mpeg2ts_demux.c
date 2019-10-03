@@ -99,6 +99,8 @@ void mpeg2ts_program_free(mpeg2ts_program_t *m2p)
       m2p->arg_destructor(m2p->arg);
    }
    
+   resetPSITableBuffer(&m2p->pmtBuffer);
+
    free(m2p);
 }
 
