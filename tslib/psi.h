@@ -139,6 +139,8 @@ typedef struct {
 } program_map_section_t; 
 
 program_map_section_t* program_map_section_new(); 
+elementary_stream_info_t* es_info_new();
+
 void program_map_section_free(program_map_section_t *pms); 
 
 int program_map_section_read(program_map_section_t *pms, uint8_t *buf, size_t buf_size, uint32_t payload_unit_start_indicator,

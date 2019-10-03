@@ -211,6 +211,11 @@ pid_info_t* mpeg2ts_program_get_pid_info(mpeg2ts_program_t *m2p, uint32_t PID)
       pid_info_t *tmp = NULL; 
       if ((tmp = vqarray_get(m2p->pids, i)) != NULL) 
       {
+         if (tmp->es_info->elementary_PID == 0x1FFF)
+         {
+             // not initialized, we just take the first PID available
+             tmp->es_info->elementary_PID = PID;
+         }
          if (tmp->es_info->elementary_PID == PID) 
          {
             pi = tmp; 

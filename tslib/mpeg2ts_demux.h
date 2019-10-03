@@ -169,7 +169,7 @@ int mpeg2ts_stream_read_ts_packet(mpeg2ts_stream_t *m2s, ts_packet_t *ts);
  * 
  * @return mpeg2ts_program_t* 
  */
-mpeg2ts_program_t* mpeg2ts_program_new(); 
+mpeg2ts_program_t* mpeg2ts_program_new(int program_number, int PID);
 
 /**
  * Free a program object
