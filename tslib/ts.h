@@ -126,7 +126,7 @@ ts_packet_t* ts_new();
 void ts_free(ts_packet_t *ts);
 
 int ts_read_header(ts_header_t *tsh, bs_t *b);
-int ts_read_adaptation_field(ts_adaptation_field_t *af, bs_t *b);
+int ts_read_adaptation_field(ts_adaptation_field_t *af, bs_t *b, int payload_in_tp);
 int ts_read(ts_packet_t *ts, uint8_t *buf, size_t buf_size);
 
 int ts_write_adaptation_field(ts_adaptation_field_t *af, bs_t *b);

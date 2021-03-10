@@ -101,11 +101,28 @@ int ts_read_header(ts_header_t *tsh, bs_t *b)
    return (bs_pos(b) - start_pos);
 }
 
-int ts_read_adaptation_field(ts_adaptation_field_t *af, bs_t *b) 
+int ts_read_adaptation_field(ts_adaptation_field_t *af, bs_t *b, int payload_in_tp) 
 { 
    af->adaptation_field_length = bs_read_u8(b); 
    int start_pos = bs_pos(b); 
-   
+
+   if (payload_in_tp)
+   {
+       if (af->adaptation_field_length > 182)
+       {
+          LOG_ERROR_ARGS("adaptation_field_length is corrupted: %d > 182", af->adaptation_field_length);
+          return 0;
+       }
+   }
+   else
+   {
+       if (af->adaptation_field_length != 183)
+       {
+          LOG_ERROR_ARGS("adaptation_field_length is corrupted: %d != 183", af->adaptation_field_length);
+          return 0;
+       }
+   }
+
    if (af->adaptation_field_length > 0) 
    {
       af->discontinuity_indicator = bs_read_u1(b); 
@@ -139,11 +156,17 @@ int ts_read_adaptation_field(ts_adaptation_field_t *af, bs_t *b)
          if (af->transport_private_data_flag) 
          {
             af->transport_private_data_length = bs_read_u8(b); 
+
+            if (af->transport_private_data_length > bs_bytes_left(b))
+            {
+                LOG_ERROR_ARGS("transport_private_data_length corrupted: %d whereas only %d bytes left", af->transport_private_data_length, bs_bytes_left(b));
+                return (- bs_bytes_left(b));
+            }
             
             if (af->transport_private_data_length > 0) 
             {
                af->private_data_bytes.len = af->transport_private_data_length; 
-               af->private_data_bytes.bytes = malloc(af->private_data_bytes.len); 
+               af->private_data_bytes.bytes = malloc(af->transport_private_data_length); 
                bs_read_bytes(b, af->private_data_bytes.bytes, af->transport_private_data_length);
             }
          }
@@ -152,6 +175,12 @@ int ts_read_adaptation_field(ts_adaptation_field_t *af, bs_t *b)
          {
             af->adaptation_field_extension_length = bs_read_u8(b); 
             int afe_start_pos = bs_pos(b); 
+
+            if (af->adaptation_field_extension_length > bs_bytes_left(b))
+            {
+                LOG_ERROR_ARGS("adaptation_field_extension_length corrupted: %d whereas only %d bytes left", af->adaptation_field_extension_length, bs_bytes_left(b));
+                return (- bs_bytes_left(b));
+            }
             
             af->ltw_flag = bs_read_u1(b); 
             af->piecewise_rate_flag = bs_read_u1(b); 
@@ -260,7 +289,7 @@ int ts_read(ts_packet_t *ts, uint8_t *buf, size_t buf_size)
    if (ts->header.adaptation_field_control & TS_ADAPTATION_FIELD) 
    {
       memset(&(ts->adaptation_field), 0x00, sizeof(ts_adaptation_field_t)); 
-      if ( (res = ts_read_adaptation_field(&(ts->adaptation_field), &b)) < 1 )
+      if ( (res = ts_read_adaptation_field(&(ts->adaptation_field), &b, ts->header.adaptation_field_control & TS_PAYLOAD)) < 1 )
       {
          SAFE_REPORT_TS_ERR(-3); 
          return res;

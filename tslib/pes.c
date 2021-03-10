@@ -87,7 +87,12 @@ int pes_read_vec(pes_packet_t *pes, const buf_t *vec, int buf_count)
          buf_ptr += vec[i].len;
       }
    }
-   
+
+   if (pes->buf_len == 0)
+   {
+       return 0;
+   }
+
    bs_t b; 
    bs_init(&b, pes->buf, pes->buf_len); 
    int header_bytes = pes_read_header(&pes->header, &b); 
