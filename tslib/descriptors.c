@@ -52,16 +52,18 @@ int read_descriptor_loop(vqarray_t *desc_list, bs_t *b, int length)
 { 
    LOG_DEBUG_ARGS ("read_descriptor_loop: length = %d", length);
    int desc_start = bs_pos(b); 
-   
-   while (length > bs_pos(b) - desc_start) 
+   bs_t * bs = bs_new(b->p, length);
+
+   while ((bs_bytes_left(bs) > 0) && (length > bs_pos(bs)))
    {
-      LOG_DEBUG_ARGS ("read_descriptor_loop: START bs_pos(b)= %d", bs_pos(b));
+      LOG_DEBUG_ARGS ("read_descriptor_loop: START bs_pos(b)= %d", desc_start + bs_pos(bs));
       descriptor_t *desc = descriptor_new(); 
-      desc = descriptor_read(desc, b);
+      desc = descriptor_read(desc, bs); 
       vqarray_add(desc_list, desc);
-      LOG_DEBUG_ARGS ("read_descriptor_loop: END bs_pos(b)= %d", bs_pos(b));
+      LOG_DEBUG_ARGS ("read_descriptor_loop: END bs_pos(b)= %d", desc_start + bs_pos(bs));
    }
-  
+   bs_skip_bytes(b, bs_pos(bs));
+
    return bs_pos(b) - desc_start;
 }
 
