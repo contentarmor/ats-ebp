@@ -1,7 +1,7 @@
 #include "tslib_version.h"
 
 #ifndef TSLIB_VERSION
-#define TSLIB_VERSION "1.0.1"
+#define TSLIB_VERSION "1.0.2"
 #endif
 
 const char* get_tslib_version()
