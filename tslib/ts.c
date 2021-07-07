@@ -224,6 +224,12 @@ int ts_parse_scte128_af_private(ts_adaptation_field_t *af)
       return 0;
    }
 
+   if (af->scte128_private_data != NULL)
+   {
+      LOG_WARN("adaptation field scte128 private data already parsed");
+      return 0;
+   }
+
    af->scte128_private_data = vqarray_new();
    bs_t b;
    bs_init(&b, af->private_data_bytes.bytes, af->private_data_bytes.len);
