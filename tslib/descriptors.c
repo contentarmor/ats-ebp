@@ -30,6 +30,7 @@
 #include "ts.h"
 #include "descriptors.h"
 #include "log.h"
+#include "ebp.h"
 
 #include <hashtable.h>
 #include <hashtable_str.h>
@@ -803,6 +804,14 @@ void init_descriptors()
    d->free_descriptor = max_bitrate_descriptor_free;
    d->print_descriptor = max_bitrate_descriptor_print;
    d->read_descriptor = max_bitrate_descriptor_read;
+   register_descriptor(d);
+
+   // EBP descriptor
+   d = (descriptor_table_entry_t *) calloc(1, sizeof(descriptor_table_entry_t));
+   d->tag = EBP_DESCRIPTOR;
+   d->free_descriptor = ebp_descriptor_free;
+   d->print_descriptor = ebp_descriptor_print;
+   d->read_descriptor = ebp_descriptor_read;
    register_descriptor(d);
 }
 
