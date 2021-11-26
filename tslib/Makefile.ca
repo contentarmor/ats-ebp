@@ -24,7 +24,7 @@ LIBS = -L . -ltslib -L../h264bitstream/.libs -lh264bitstream -L../logging/ -llog
 CFLAGS  += $(INCLUDES)
 LDFLAGS += $(LIBS)
 
-TSLIB_VERSION = 1.0.2
+TSLIB_VERSION = 1.0.3
 CFLAGS  += -DTSLIB_VERSION=\"$(TSLIB_VERSION)\"
 
 all: libtslib.so
@@ -35,7 +35,7 @@ libtslib.a: $(OBJS)
 
 libtslib.so: $(OBJS)
 	$(LD) -shared -o $@.$(TSLIB_VERSION) $^
-	ln -s $@.$(TSLIB_VERSION) $@
+	ln -sf $@.$(TSLIB_VERSION) $@
 
 clean:
 	rm -f $(OBJS) *.a core *.so *.so.*
