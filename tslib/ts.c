@@ -51,7 +51,6 @@ ts_packet_t* ts_new()
 void ts_free(ts_packet_t *ts) 
 { 
    if (ts == NULL) return; 
-   if (ts->payload.bytes != NULL) free(ts->payload.bytes); 
    if (ts->adaptation_field.private_data_bytes.bytes != NULL) free(ts->adaptation_field.private_data_bytes.bytes); 
    if (ts->adaptation_field.scte128_private_data != NULL)
    {
@@ -80,6 +79,7 @@ int ts_read_header(ts_header_t *tsh, bs_t *b)
    uint8_t sync_byte = bs_read_u8(b); 
    if (sync_byte != TS_SYNC_BYTE) 
    {
+      memset(tsh, 0x00, sizeof(ts_header_t)); 
       LOG_ERROR_ARGS("Got 0x%02X instead of expected sync byte 0x%02X", sync_byte, TS_SYNC_BYTE); 
       return TS_ERROR_NO_SYNC_BYTE;
    }
@@ -282,7 +282,6 @@ int ts_read(ts_packet_t *ts, uint8_t *buf, size_t buf_size)
    
    bs_t b; 
    bs_init(&b, buf, TS_SIZE); 
-   memset(&(ts->header), 0x00, sizeof(ts_header_t)); 
 
    int res = 0;
 
@@ -305,8 +304,8 @@ int ts_read(ts_packet_t *ts, uint8_t *buf, size_t buf_size)
    if (ts->header.adaptation_field_control & TS_PAYLOAD) 
    {
       ts->payload.len = TS_SIZE - bs_pos(&b); 
-      ts->payload.bytes = malloc(ts->payload.len); 
-      bs_read_bytes(&b, ts->payload.bytes, ts->payload.len);
+      ts->payload.bytes = b.p;
+      return TS_SIZE;
    }
    
    // FIXME read and interpret pointer field
