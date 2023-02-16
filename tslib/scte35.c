@@ -198,6 +198,7 @@ int scte35_splice_info_section_read(scte35_splice_info_section *sis, uint8_t *bu
    if (SCTE35_SPLICE_TABLE_ID != sis->table_id)
    {
       LOG_ERROR_ARGS ("scte35_splice_info_section_read: FAIL: table_id does not equal 0x%x", SCTE35_SPLICE_TABLE_ID);
+      bs_free(b);
       return -1;
    }
 
@@ -282,7 +283,9 @@ int scte35_splice_info_section_read(scte35_splice_info_section *sis, uint8_t *bu
    }
 
    sis->CRC_32 = bs_read_u32(b);
- 
+
+   bs_free(b);
+    
    resetPSITableBuffer(scte35TableBuffer);
 
    return 1;

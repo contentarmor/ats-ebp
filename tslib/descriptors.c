@@ -65,6 +65,8 @@ int read_descriptor_loop(vqarray_t *desc_list, bs_t *b, int length)
    }
    bs_skip_bytes(b, bs_pos(bs));
 
+   bs_free(bs);
+
    return bs_pos(b) - desc_start;
 }
 
